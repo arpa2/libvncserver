@@ -74,7 +74,7 @@ main(int argc, char **argv)
 	rfbClient* client = rfbGetClient(8,3,4);
 	time_t t=time(NULL);
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
         client->GetUser = getuser;
         client->GetPassword = getpassword;
 #endif

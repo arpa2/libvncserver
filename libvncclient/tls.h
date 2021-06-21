@@ -48,9 +48,9 @@ int WriteToTLS(rfbClient* client, const char *buf, unsigned int n);
 /* Free TLS resources */
 void FreeTLS(rfbClient* client);
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
 /* Get the number of bits in the current cipher */
 int GetTLSCipherBits(rfbClient* client);
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 
 #endif /* TLS_H */

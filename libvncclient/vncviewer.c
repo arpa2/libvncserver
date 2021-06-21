@@ -353,11 +353,11 @@ rfbClient* rfbGetClient(int bitsPerSample,int samplesPerPixel,
   client->listen6Address = NULL;
   client->clientAuthSchemes = NULL;
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
   client->GetSASLMechanism = NULL;
   client->GetUser = NULL;
   client->saslSecret = NULL;
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 
   return client;
 }
@@ -549,10 +549,10 @@ void rfbClientCleanup(rfbClient* client) {
   if (client->clientAuthSchemes)
     free(client->clientAuthSchemes);
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
   if (client->saslSecret)
     free(client->saslSecret);
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 
 #ifdef WIN32
   if(WSACleanup() != 0) {

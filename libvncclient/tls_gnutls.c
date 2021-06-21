@@ -339,10 +339,10 @@ ReadVeNCryptSecurityType(rfbClient* client, uint32_t *result)
         if (t==rfbVeNCryptTLSNone ||
             t==rfbVeNCryptTLSVNC ||
             t==rfbVeNCryptTLSPlain ||
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
             t==rfbVeNCryptTLSSASL ||
             t==rfbVeNCryptX509SASL ||
-#endif /*LIBVNCSERVER_HAVE_SASL */
+#endif /*LIBVNCSERVER_HAVE_CYRUSSASL */
             t==rfbVeNCryptX509None ||
             t==rfbVeNCryptX509VNC ||
             t==rfbVeNCryptX509Plain)
@@ -502,9 +502,9 @@ HandleVeNCryptAuth(rfbClient* client)
     case rfbVeNCryptTLSNone:
     case rfbVeNCryptTLSVNC:
     case rfbVeNCryptTLSPlain:
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
     case rfbVeNCryptTLSSASL:
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
       anonTLS = TRUE;
       break;
     default:
@@ -619,7 +619,7 @@ void FreeTLS(rfbClient* client)
   }
 }
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
 int
 GetTLSCipherBits(rfbClient* client)
 {
@@ -627,5 +627,5 @@ GetTLSCipherBits(rfbClient* client)
 
     return gnutls_cipher_get_key_size(cipher) * 8;
 }
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 

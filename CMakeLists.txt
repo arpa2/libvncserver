@@ -57,7 +57,8 @@ option(WITH_TIGHTVNC_FILETRANSFER "Enable filetransfer if there is pthreads supp
 option(WITH_24BPP "Allow 24 bpp" ON)
 option(WITH_IPv6 "Enable IPv6 Support" ON)
 option(WITH_WEBSOCKETS "Build with websockets support" ON)
-option(WITH_SASL "Build with SASL support" ON)
+option(WITH_CYRUSSASL "Build with CyrusSASL client support" ON)
+option(WITH_DIASASL "Build with DiaSASL server support" ON)
 
 
 
@@ -329,17 +330,29 @@ endif(NOT HAVE_LIBVNCSERVER_IN_ADDR_T)
 
 TEST_BIG_ENDIAN(LIBVNCSERVER_WORDS_BIGENDIAN)
 
-if(WITH_SASL)
+if(WITH_CYRUSSASL)
   find_path(SASL2_INCLUDE_DIR sasl/sasl.h)
   find_library(LIBSASL2_LIBRARIES sasl2 libsasl.lib)
-endif(WITH_SASL)
+endif(WITH_CYRUSSASL)
 
-if(WITH_SASL AND LIBSASL2_LIBRARIES AND SASL2_INCLUDE_DIR)
-  message(STATUS "Building with SASL: ${LIBSASL2_LIBRARIES} and ${SASL2_INCLUDE_DIR}")
-  set(LIBVNCSERVER_HAVE_SASL 1)
-  set(ADDITIONAL_LIBS ${ADDITIONAL_LIBS} ${LIBSASL2_LIBRARIES})
+if(WITH_CYRUSSASL AND LIBSASL2_LIBRARIES AND SASL2_INCLUDE_DIR)
+  message(STATUS "Building the client with CyrusSASL: ${LIBSASL2_LIBRARIES} and ${SASL2_INCLUDE_DIR}")
+  set(LIBVNCSERVER_HAVE_CYRUSSASL 1)
+  set(ADDITIONAL_CLIENT_LIBS ${ADDITIONAL_CLIENT_LIBS} ${LIBSASL2_LIBRARIES})
   include_directories(${SASL2_INCLUDE_DIR})
-endif(WITH_SASL AND LIBSASL2_LIBRARIES AND SASL2_INCLUDE_DIR)
+endif(WITH_CYRUSSASL AND LIBSASL2_LIBRARIES AND SASL2_INCLUDE_DIR)
+
+if(WITH_DIASASL)
+  find_path(Quick-DiaSASL_INCLUDE_DIRS arpa2/quick-diasasl.h HINTS ENV CPATH)
+  find_library(Quick-DiaSASL_LIBRARIES diasasl HINTS ENV LD_LIBRARY_PATH)
+endif(WITH_DIASASL)
+
+if(WITH_DIASASL AND Quick-DiaSASL_LIBRARIES AND Quick-DiaSASL_INCLUDE_DIRS)
+  message(STATUS "Building the server with DiaSASL: ${Quick-DiaSASL_LIBRARIES} and ${Quick-DiaSASL_INCLUDE_DIRS}")
+  set(LIBVNCSERVER_HAVE_DIASASL 1)
+  set(ADDITIONAL_SERVER_LIBS ${ADDITIONAL_SERVER_LIBS} ${Quick-DiaSASL_LIBRARIES})
+  include_directories(${Quick-DiaSASL_INCLUDE_DIRS})
+endif(WITH_DIASASL AND Quick-DiaSASL_LIBRARIES AND Quick-DiaSASL_INCLUDE_DIRS)
 
 # TODO:
 # LIBVNCSERVER_ENOENT_WORKAROUND
@@ -421,7 +434,7 @@ else()
   )
 endif()
 
-if(LIBVNCSERVER_HAVE_SASL)
+if(LIBVNCSERVER_HAVE_CYRUSSASL)
   set(LIBVNCCLIENT_SOURCES
     ${LIBVNCCLIENT_SOURCES}
     ${LIBVNCCLIENT_DIR}/sasl.c
@@ -503,6 +516,7 @@ endif(WIN32)
 
 target_link_libraries(vncclient
                       ${ADDITIONAL_LIBS}
+                      ${ADDITIONAL_CLIENT_LIBS}
                       ${ZLIB_LIBRARIES}
                       ${LZO_LIBRARIES}
                       ${JPEG_LIBRARIES}
@@ -512,6 +526,7 @@ target_link_libraries(vncclient
 )
 target_link_libraries(vncserver
                       ${ADDITIONAL_LIBS}
+                      ${ADDITIONAL_SERVER_LIBS}
                       ${ZLIB_LIBRARIES}
                       ${LZO_LIBRARIES}
                       ${JPEG_LIBRARIES}

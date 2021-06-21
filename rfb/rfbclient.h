@@ -57,9 +57,9 @@
 #include <rfb/keysym.h>
 #include <rfb/threading.h>
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
 #include <sasl/sasl.h>
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 
 #define rfbClientSwap16IfLE(s) \
     (*(char *)&client->endianTest ? ((((s) & 0xff) << 8) | (((s) >> 8) & 0xff)) : (s))
@@ -233,10 +233,10 @@ typedef rfbBool (*GotJpegProc)(struct _rfbClient* client, const uint8_t* buffer,
 typedef rfbBool (*LockWriteToTLSProc)(struct _rfbClient* client);   /** @deprecated */
 typedef rfbBool (*UnlockWriteToTLSProc)(struct _rfbClient* client); /** @deprecated */
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
 typedef char* (*GetUserProc)(struct _rfbClient* client);
 typedef char* (*GetSASLMechanismProc)(struct _rfbClient* client, char* mechlist);
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 
 typedef struct _rfbClient {
 	uint8_t* frameBuffer;
@@ -438,7 +438,7 @@ typedef struct _rfbClient {
         /** Hook for custom JPEG decoding and rendering */
         GotJpegProc GotJpeg;
 
-#ifdef LIBVNCSERVER_HAVE_SASL
+#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
         sasl_conn_t *saslconn;
         const char *saslDecoded;
         unsigned int saslDecodedLength;
@@ -450,7 +450,7 @@ typedef struct _rfbClient {
         GetSASLMechanismProc GetSASLMechanism;
         GetUserProc GetUser;
 
-#endif /* LIBVNCSERVER_HAVE_SASL */
+#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
 
 #ifdef LIBVNCSERVER_HAVE_LIBZ
 #ifdef LIBVNCSERVER_HAVE_LIBJPEG
