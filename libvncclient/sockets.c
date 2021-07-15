@@ -137,16 +137,16 @@ ReadFromRFBServer(rfbClient* client, char *out, unsigned int n)
       if (client->tlsSession)
         i = ReadFromTLS(client, client->buf + client->buffered, RFB_BUF_SIZE - client->buffered);
       else
-#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
+#ifdef LIBVNCCLIENT_HAVE_CYRUSSASL
       if (client->saslconn)
         i = ReadFromSASL(client, client->buf + client->buffered, RFB_BUF_SIZE - client->buffered);
       else {
-#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
+#endif /* LIBVNCCLIENT_HAVE_CYRUSSASL */
         i = read(client->sock, client->buf + client->buffered, RFB_BUF_SIZE - client->buffered);
 #ifdef WIN32
 	if (i < 0) errno=WSAGetLastError();
 #endif
-#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
+#ifdef LIBVNCCLIENT_HAVE_CYRUSSASL
       }
 #endif
   
@@ -189,7 +189,7 @@ ReadFromRFBServer(rfbClient* client, char *out, unsigned int n)
       if (client->tlsSession)
         i = ReadFromTLS(client, out, n);
       else
-#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
+#ifdef LIBVNCCLIENT_HAVE_CYRUSSASL
       if (client->saslconn)
         i = ReadFromSASL(client, out, n);
       else
@@ -253,11 +253,11 @@ WriteToRFBServer(rfbClient* client, const char *buf, unsigned int n)
   int i = 0;
   int j;
   const char *obuf = buf;
-#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
+#ifdef LIBVNCCLIENT_HAVE_CYRUSSASL
   const char *output;
   unsigned int outputlen;
   int err;
-#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
+#endif /* LIBVNCCLIENT_HAVE_CYRUSSASL */
 
   if (client->serverPort==-1)
     return TRUE; /* vncrec playing */
@@ -269,7 +269,7 @@ WriteToRFBServer(rfbClient* client, const char *buf, unsigned int n)
 
     return TRUE;
   }
-#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
+#ifdef LIBVNCCLIENT_HAVE_CYRUSSASL
   if (client->saslconn) {
     err = sasl_encode(client->saslconn,
                       buf, n,
@@ -282,7 +282,7 @@ WriteToRFBServer(rfbClient* client, const char *buf, unsigned int n)
     obuf = output;
     n = outputlen;
   }
-#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
+#endif /* LIBVNCCLIENT_HAVE_CYRUSSASL */
 
   while (i < n) {
     j = write(client->sock, obuf + i, (n - i));

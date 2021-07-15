@@ -56,12 +56,12 @@ void FreeTLS(rfbClient* client)
 
 }
 
-#ifdef LIBVNCSERVER_HAVE_CYRUSSASL
+#ifdef LIBVNCCLIENT_HAVE_CYRUSSASL
 int
 GetTLSCipherBits(rfbClient* client)
 {
   rfbClientLog("TLS is not supported.\n");
   return 0;
 }
-#endif /* LIBVNCSERVER_HAVE_CYRUSSASL */
+#endif /* LIBVNCCLIENT_HAVE_CYRUSSASL */
 
